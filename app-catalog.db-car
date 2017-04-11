@@ -1,0 +1,367 @@
+{
+   "mec.latency-test" : {
+      "enabled" : "Y",
+      "metadata" : {
+         "microservice-metadata" : {
+            "latencyresponder" : {
+               "external" : {
+                  "networks" : [
+                     "latencyresponder.latency-test-network"
+                  ],
+                  "events" : [
+                     "latencyresponder.ping"
+                  ],
+                  "http-apis" : []
+               },
+               "tenancy" : "single",
+               "workloads" : {
+                  "latencyresponder" : {
+                     "networks" : {
+                        "latency-test-network" : {
+                           "protocol" : "udp",
+                           "port" : 10004
+                        }
+                     },
+                     "events" : {
+                        "ping" : {
+                           "fn" : "latencyresponder.event_handler"
+                        }
+                     },
+                     "http-apis" : {},
+                     "image" : "latencyresponder",
+                     "resources" : {
+                        "default" : {
+                           "memory" : "256Mi",
+                           "cpu" : "250m"
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "app-metadata" : {
+            "type" : "event",
+            "microservices" : {
+               "latencyresponder" : {
+                  "exposed" : {
+                     "http-apis" : [
+                        {}
+                     ],
+                     "events" : [
+                        {
+                           "latencyresponder.ping" : "app@client"
+                        }
+                     ],
+                     "networks" : [
+                        {
+                           "latencyresponder.latency-test-network" : "app@client"
+                        }
+                     ]
+                  },
+                  "resources" : "default"
+               }
+            }
+         }
+      },
+      "low-latency" : "Y",
+      "client-regions" : [
+         "NA",
+         "EU"
+      ]
+   },
+   "mec.maintenance-br-network" : {
+      "client-regions" : [
+         "NA",
+         "EU"
+      ],
+      "low-latency" : "Y",
+      "metadata" : {
+         "app-metadata" : {
+            "microservices" : {
+               "micro-ar-network" : {
+                  "exposed" : {
+                     "networks" : [
+                        {
+                           "micro-ar-network.test-network" : "app@client"
+                        }
+                     ],
+                     "events" : [],
+                     "http-apis" : []
+                  },
+                  "resources" : "default"
+               }
+            },
+            "type" : "event"
+         },
+         "microservice-metadata" : {
+            "micro-ar-network" : {
+               "workloads" : {
+                  "ar-network" : {
+                     "http-apis" : {},
+                     "networks" : {
+                        "test-network" : {
+                           "protocol" : "tcp",
+                           "port" : 5001
+                        }
+                     },
+                     "events" : {},
+                     "image" : "ar-network-ens-broadcast",
+                     "resources" : {
+                        "default" : {
+                           "memory" : "256Mi",
+                           "cpu" : "250m"
+                        }
+                     }
+                  }
+               },
+               "tenancy" : "single",
+               "external" : {
+                  "events" : [],
+                  "networks" : [
+                     "micro-ar-network.test-network"
+                  ],
+                  "http-apis" : []
+               }
+            }
+         }
+      },
+      "enabled" : "Y"
+   },
+   "mec.car-network-pitcher" : {
+      "low-latency" : "Y",
+      "client-regions" : [
+         "NA",
+         "EU"
+      ],
+      "enabled" : "Y",
+      "metadata" : {
+         "app-metadata" : {
+            "type" : "event",
+            "microservices" : {
+               "micro-car-network" : {
+                  "resources" : "default",
+                  "exposed" : {
+                     "http-apis" : [],
+                     "networks" : [
+                        {
+                           "micro-car-network.test-network" : "app@client"
+                        }
+                     ],
+                     "events" : []
+                  }
+               }
+            }
+         },
+         "microservice-metadata" : {
+            "micro-car-network" : {
+               "workloads" : {
+                  "car-network" : {
+                     "http-apis" : {},
+                     "events" : {},
+                     "networks" : {
+                        "test-network" : {
+                           "protocol" : "tcp",
+                           "port" : 5002
+                        }
+                     },
+                     "image" : "car-network-ens-broadcast",
+                     "resources" : {
+                        "default" : {
+                           "memory" : "256Mi",
+                           "cpu" : "250m"
+                        }
+                     }
+                  }
+               },
+               "tenancy" : "single",
+               "external" : {
+                  "events" : [],
+                  "networks" : [
+                     "micro-car-network.test-network"
+                  ],
+                  "http-apis" : []
+               }
+            }
+         }
+      }
+   },
+   "mec.robot-test" : {
+      "metadata" : {
+         "app-metadata" : {
+            "microservices" : {
+               "micro-robot-network" : {
+                  "resources" : "default",
+                  "exposed" : {
+                     "http-apis" : [
+                        {}
+                     ],
+                     "events" : [
+                        {
+                           "micro-robot-network.ping" : "app@client"
+                        }
+                     ],
+                     "networks" : [
+                        {
+                           "micro-robot-network.test-network" : "app@client"
+                        }
+                     ]
+                  }
+               }
+            },
+            "type" : "event"
+         },
+         "microservice-metadata" : {
+            "micro-robot-network" : {
+               "tenancy" : "single",
+               "external" : {
+                  "http-apis" : [],
+                  "networks" : [],
+                  "events" : [
+                     "micro-robot-network.ping"
+                  ]
+               },
+               "workloads" : {
+                  "workloadrobot-network" : {
+                     "events" : {
+                        "ping" : {
+                           "fn" : "robot_ens_server.event_handler"
+                        }
+                     },
+                     "networks" : {},
+                     "http-apis" : {},
+                     "resources" : {
+                        "default" : {
+                           "memory" : "256Mi",
+                           "cpu" : "250m"
+                        }
+                     },
+                     "image" : "workloadrobot-network"
+                  }
+               }
+            }
+         }
+      },
+      "enabled" : "Y",
+      "client-regions" : [
+         "NA",
+         "EU"
+      ],
+      "low-latency" : "Y"
+   },
+   "mec.car-network-catcher" : {
+      "metadata" : {
+         "app-metadata" : {
+            "microservices" : {
+               "micro-car-network" : {
+                  "resources" : "default",
+                  "exposed" : {
+                     "http-apis" : [],
+                     "networks" : [
+                        {
+                           "micro-car-network.test-network" : "app@client"
+                        }
+                     ],
+                     "events" : []
+                  }
+               }
+            },
+            "type" : "event"
+         },
+         "microservice-metadata" : {
+            "micro-car-network" : {
+               "tenancy" : "single",
+               "external" : {
+                  "http-apis" : [],
+                  "networks" : [
+                     "micro-car-network.test-network"
+                  ],
+                  "events" : []
+               },
+               "workloads" : {
+                  "car-network" : {
+                     "networks" : {
+                        "test-network" : {
+                           "protocol" : "tcp",
+                           "port" : 5003
+                        }
+                     },
+                     "events" : {},
+                     "http-apis" : {},
+                     "resources" : {
+                        "default" : {
+                           "cpu" : "250m",
+                           "memory" : "256Mi"
+                        }
+                     },
+                     "image" : "car-network-ens-client"
+                  }
+               }
+            }
+         }
+      },
+      "enabled" : "Y",
+      "client-regions" : [
+         "NA",
+         "EU"
+      ],
+      "low-latency" : "Y"
+   },
+   "mec.maintenance-ar-network" : {
+      "metadata" : {
+         "microservice-metadata" : {
+            "micro-ar-network" : {
+               "workloads" : {
+                  "ar-network" : {
+                     "http-apis" : {},
+                     "networks" : {
+                        "test-network" : {
+                           "protocol" : "tcp",
+                           "port" : 5000
+                        }
+                     },
+                     "events" : {},
+                     "resources" : {
+                        "default" : {
+                           "memory" : "256Mi",
+                           "cpu" : "250m"
+                        }
+                     },
+                     "image" : "ar-network-ens-client"
+                  }
+               },
+               "external" : {
+                  "events" : [],
+                  "networks" : [
+                     "micro-ar-network.test-network"
+                  ],
+                  "http-apis" : []
+               },
+               "tenancy" : "single"
+            }
+         },
+         "app-metadata" : {
+            "microservices" : {
+               "micro-ar-network" : {
+                  "resources" : "default",
+                  "exposed" : {
+                     "http-apis" : [],
+                     "events" : [],
+                     "networks" : [
+                        {
+                           "micro-ar-network.test-network" : "app@client"
+                        }
+                     ]
+                  }
+               }
+            },
+            "type" : "event"
+         }
+      },
+      "enabled" : "Y",
+      "client-regions" : [
+         "NA",
+         "EU"
+      ],
+      "low-latency" : "Y"
+   }
+}

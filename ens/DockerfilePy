@@ -1,0 +1,17 @@
+FROM ubuntu:14.04
+RUN echo "deb http://archive.ubuntu.com/ubuntu/ $(lsb_release -sc) main universe" >> /etc/apt/sources.list
+ENV http_proxy http://165.225.104.34:80
+ENV https_proxy https://165.225.104.34:80 
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes python2.7
+#RUN apt-get update 
+#RUN apt-get install -y --force-yes python2.7
+RUN mkdir /opt/ens
+COPY runtime/workloadPy.sh /opt/ens/
+COPY runtime/ensiwc.so /opt/ens/
+COPY runtime/enswmain.py /opt/ens/
+COPY runtime/enswr.py /opt/ens/
+
+RUN chmod 777 /opt/ens/workloadPy.sh
+
+ENTRYPOINT ["/opt/ens/workloadPy.sh"]
+

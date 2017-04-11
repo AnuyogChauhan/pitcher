@@ -1,0 +1,15 @@
+Description=Car Container
+After=docker.service
+Requires=docker.service
+ 
+[Service]
+TimeoutStartSec=0
+Restart=always
+RestartSec=30
+ExecStartPre=-/usr/bin/docker stop car-network 
+ExecStartPre=-/usr/bin/docker rm car-network 
+ExecStart=/usr/bin/docker run --name=car-network -p 5002:5002 car-network
+ 
+[Install]
+WantedBy=multi-user.target
+
